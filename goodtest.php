@@ -12,11 +12,13 @@
 
     $sql = "SELECT users.id, users.first_name, users.last_name, teams_users.team_id, teams.name, GROUP_CONCAT( teams.name ) as 'names' FROM users left join teams_users on users.id = teams_users.user_id left join teams on teams_users.team_id = teams.id group by users.id";
  	$result = $conn->query($sql);
-
-
  	while($row = $result->fetch_assoc()) {
-		$array[] = array('id'=>$row["id"], 'Name'=>$row["first_name"]." ".$row["last_name"], 'Teams'=>$row["names"]);
+		$users[] = array('id'=>$row["id"], 'Name'=>$row["first_name"]." ".$row["last_name"], 'Teams'=>$row["names"]);
 	}
+
+
+
+ 	
 
 ?>
 
@@ -27,8 +29,6 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 	<style>
 		.centered {
     		margin-top: 5%;
@@ -46,20 +46,22 @@
 	</div>
 	<div class="container centered">
 		<table class="table table-bordered">
+			<?php if(empty($users)) echo "There is No DATA. Please enter your data"; else { ?>
 			<tr>
-				<?php foreach($array[0] as $key=>$value){ ?>
-			            <th class="col-sm" style="font-size: 30px"><?php echo $key; ?></th>
+				<?php foreach($users[0] as $property=>$value){ ?>
+			            <th class="col-sm" style="font-size: 30px"><?php echo $property; ?></th>
 				<?php } ?>
 			</tr>
-			<?php foreach( $array as $key=>$value){ ?>
+			<?php foreach( $users as $id=>$row){ ?>
 				<tr>
-					<?php foreach($value as $key2=>$value2){ ?>
+					<?php foreach($row as $property=>$value){ ?>
 						<td class="col-sm" style="font-size: 20px">
-							<?php echo $value2; ?>
+							<?php echo $value; ?>
 						</td>
 					<?php }?>
 				</tr>
 		    <?php } ?>
+			<?php } ?>
 		</table>
 	</div>
 		
